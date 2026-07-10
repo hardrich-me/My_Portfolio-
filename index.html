@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samuel Ojo — Graphic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#1c1815;
+    --board-2:#241f1a;
+    --paper:#f2ecdd;
+    --paper-2:#ece4d0;
+    --ink:#211d18;
+    --amber:#e2a53d;
+    --tape:rgba(255,247,222,0.62);
+    --tape-dark:rgba(20,16,10,0.18);
+    --cream:#f2ecdd;
+    --muted:#a89f8d;
+    --pin-1:#c9482f;
+    --pin-2:#3f6b52;
+    --pin-3:#3d5a8a;
+    --pin-4:#b8863b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--board);
+    color:var(--cream);
+    font-family:'Space Grotesk', sans-serif;
+    overflow-x:hidden;
+    position:relative;
+  }
+  /* grain overlay */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    z-index:2;pointer-events:none;
+    opacity:0.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  ::selection{background:var(--amber);color:var(--ink);}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;z-index:3;}
+
+  /* corkboard texture band behind work section */
+  .board-texture{
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,255,255,0.025) 0, transparent 40%),
+      radial-gradient(circle at 85% 60%, rgba(255,255,255,0.02) 0, transparent 45%),
+      repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0px, transparent 2px, transparent 26px, rgba(255,255,255,0.012) 28px),
+      var(--board-2);
+  }
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:20px 32px;
+    z-index:100;
+    background:linear-gradient(var(--board) 60%, transparent);
+  }
+  .nav-mark{font-family:'Anton',sans-serif;font-size:19px;letter-spacing:0.02em;color:var(--cream);}
+  .nav-links{display:flex;gap:26px;font-size:12.5px;text-transform:uppercase;letter-spacing:0.12em;font-weight:500;}
+  .nav-links a{opacity:0.6;transition:opacity .2s;color:var(--muted);}
+  .nav-links a:hover{opacity:1;color:var(--amber);}
+
+  /* HERO */
+  .hero{
+    min-height:100svh;
+    display:flex;flex-direction:column;justify-content:center;
+    position:relative;
+    padding:120px 32px 40px;
+  }
+  .hero-eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--amber);
+    text-transform:uppercase;letter-spacing:0.18em;margin-bottom:18px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .hero-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--amber);}
+  .hero-stack{font-family:'Anton',sans-serif;line-height:0.87;text-transform:uppercase;letter-spacing:-0.005em;}
+  .hero-stack .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 22px;}
+  .hero-name{font-size:clamp(52px,10.5vw,140px);color:var(--cream);}
+  .hero-role{font-size:clamp(52px,10.5vw,140px);color:transparent;-webkit-text-stroke:1.6px var(--cream);}
+  .hero-role.fill{color:var(--amber);-webkit-text-stroke:0;}
+  .hero-sub{max-width:520px;margin-top:32px;font-size:16.5px;line-height:1.65;color:var(--muted);}
+  .hero-sub strong{color:var(--cream);font-weight:600;}
+  .hero-cta{margin-top:36px;display:flex;gap:16px;flex-wrap:wrap;}
+  .btn{
+    font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.05em;
+    padding:14px 26px;border-radius:3px;border:1px solid var(--cream);
+    display:inline-flex;align-items:center;gap:8px;transition:all .25s ease;
+  }
+  .btn.solid{background:var(--amber);border-color:var(--amber);color:var(--ink);font-weight:600;}
+  .btn.solid:hover{background:var(--cream);border-color:var(--cream);}
+  .btn.ghost:hover{background:var(--cream);color:var(--ink);}
+
+  /* marquee client ticker */
+  .ticker{
+    position:relative;z-index:3;
+    border-top:1px solid rgba(242,236,221,0.12);
+    border-bottom:1px solid rgba(242,236,221,0.12);
+    padding:16px 0;overflow:hidden;white-space:nowrap;
+    background:var(--board-2);
+  }
+  .ticker-track{display:inline-flex;gap:48px;animation:scroll 28s linear infinite;}
+  .ticker span{
+    font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:48px;
+  }
+  .ticker span em{color:var(--amber);font-style:normal;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* SECTION LABELS */
+  .sec-label{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--amber);
+    text-transform:uppercase;letter-spacing:0.16em;display:flex;align-items:center;gap:14px;margin-bottom:14px;
+  }
+  .sec-label::before{content:"";width:26px;height:1px;background:var(--amber);}
+  .sec-title{font-family:'Archivo Black',sans-serif;font-size:clamp(26px,3.6vw,42px);text-transform:uppercase;margin-bottom:6px;}
+
+  /* WORK / CORKBOARD */
+  .work{padding:90px 0 70px;}
+  .work-intro{max-width:600px;margin-bottom:20px;}
+  .work-intro p{color:var(--muted);font-size:15.5px;line-height:1.7;margin-top:12px;}
+
+  .category-block{padding:60px 0 30px;}
+  .category-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:50px;}
+  .category-head h3{font-family:'Anton',sans-serif;font-size:clamp(22px,3.2vw,32px);text-transform:uppercase;}
+  .category-note{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);max-width:220px;text-align:right;line-height:1.5;}
+
+  .board{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:54px 34px;
+    padding:20px 10px 50px;
+  }
+  @media (max-width:900px){.board{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:600px){.board{grid-template-columns:1fr;gap:64px;}}
+
+  /* flyer card, taped */
+  .flyer{
+    position:relative;background:var(--paper);
+    box-shadow:0 18px 30px -10px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.3);
+    padding:10px 10px 0;
+    transition:transform .35s ease, box-shadow .35s ease;
+    cursor:pointer;
+  }
+  .flyer:nth-child(6n+1){transform:rotate(-2.4deg);}
+  .flyer:nth-child(6n+2){transform:rotate(1.6deg);}
+  .flyer:nth-child(6n+3){transform:rotate(-1deg);}
+  .flyer:nth-child(6n+4){transform:rotate(2.2deg);}
+  .flyer:nth-child(6n+5){transform:rotate(-1.8deg);}
+  .flyer:nth-child(6n+6){transform:rotate(1.1deg);}
+  .flyer:hover{transform:rotate(0deg) translateY(-8px) scale(1.02);box-shadow:0 30px 40px -12px rgba(0,0,0,0.6);z-index:5;}
+
+  .tape{
+    position:absolute;top:-14px;left:50%;transform:translateX(-50%) rotate(-3deg);
+    width:74px;height:26px;background:var(--tape);
+    box-shadow:0 2px 3px rgba(0,0,0,0.25);
+    border-left:1px dashed rgba(0,0,0,0.06);border-right:1px dashed rgba(0,0,0,0.06);
+  }
+  .flyer:nth-child(odd) .tape{transform:translateX(-50%) rotate(3deg);}
+
+  .flyer-img{aspect-ratio:4/5;overflow:hidden;background:#0d0c0a;margin-top:6px;}
+  .flyer-img img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.02);}
+  .flyer-cap{padding:16px 8px 20px;color:var(--ink);}
+  .flyer-tag{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a6a2c;
+    text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;
+  }
+  .flyer-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16.5px;margin-bottom:6px;}
+  .flyer-desc{font-size:13px;line-height:1.55;color:#5b5546;}
+
+  /* logo card, pinned */
+  .pin-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;padding:10px 10px 40px;}
+  @media (max-width:900px){.pin-grid{grid-template-columns:repeat(2,1fr);}}
+  .pinned{
+    position:relative;background:var(--paper-2);
+    box-shadow:0 14px 24px -8px rgba(0,0,0,0.5);
+    padding:26px 20px 20px;text-align:center;
+    transition:transform .3s ease;
+  }
+  .pinned:nth-child(odd){transform:rotate(1.6deg);}
+  .pinned:nth-child(even){transform:rotate(-1.4deg);}
+  .pinned:hover{transform:rotate(0deg) translateY(-6px);}
+  .pin-dot{
+    position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+    width:16px;height:16px;border-radius:50%;
+    box-shadow:0 3px 4px rgba(0,0,0,0.4), inset 0 -2px 3px rgba(0,0,0,0.25);
+  }
+  .pinned:nth-child(4n+1) .pin-dot{background:var(--pin-1);}
+  .pinned:nth-child(4n+2) .pin-dot{background:var(--pin-2);}
+  .pinned:nth-child(4n+3) .pin-dot{background:var(--pin-3);}
+  .pinned:nth-child(4n) .pin-dot{background:var(--pin-4);}
+  .pinned-img{aspect-ratio:1/1;background:#0d0c0a;margin-bottom:14px;display:flex;align-items:center;justify-content:center;}
+  .pinned-img img{width:100%;height:100%;object-fit:contain;}
+  .pinned-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a6a2c;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;}
+  .pinned-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:var(--ink);margin-bottom:6px;}
+  .pinned-desc{font-size:12px;line-height:1.5;color:#5b5546;}
+
+  /* ABOUT */
+  .about{padding:50px 0 110px;}
+  .about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start;}
+  .about-tools{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;}
+  .tool-pill{
+    font-family:'JetBrains Mono',monospace;font-size:12px;padding:8px 15px;
+    border:1px solid rgba(242,236,221,0.18);color:var(--muted);border-radius:2px;
+  }
+  .about-text p{font-size:16.5px;line-height:1.75;color:var(--muted);margin-bottom:16px;}
+  .about-text strong{color:var(--cream);}
+
+  /* CONTACT — pinned flyer style */
+  .contact{padding:0 0 100px;}
+  .contact-panel{
+    background:var(--amber);color:var(--ink);
+    padding:56px 48px;position:relative;
+    transform:rotate(-0.6deg);
+    box-shadow:0 20px 40px -12px rgba(0,0,0,0.5);
+  }
+  .contact-panel .tape{background:var(--tape);}
+  .contact-panel h2{font-family:'Anton',sans-serif;font-size:clamp(32px,5.6vw,64px);text-transform:uppercase;line-height:0.95;margin-bottom:14px;}
+  .contact-panel p{font-size:15.5px;max-width:440px;line-height:1.6;margin-bottom:30px;opacity:0.85;}
+  .contact-bar{display:flex;flex-wrap:wrap;gap:14px;}
+  .contact-pill{
+    background:var(--ink);color:var(--cream);border-radius:100px;padding:14px 24px;
+    display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:13.5px;
+    transition:transform .2s ease;
+  }
+  .contact-pill:hover{transform:translateY(-3px);}
+
+  footer{padding:30px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);letter-spacing:0.05em;position:relative;z-index:3;}
+
+  @media (max-width:760px){
+    .about-grid{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .contact-panel{padding:40px 24px;}
+    .category-head{flex-direction:column;align-items:flex-start;gap:10px;}
+    .category-note{text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-mark">S. OJO</div>
+  <div class="nav-links">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap" style="width:100%;">
+    <div class="hero-eyebrow">Available for freelance — 2026</div>
+    <div class="hero-stack">
+      <div class="row"><span class="hero-name">SAMUEL</span></div>
+      <div class="row"><span class="hero-name">OJO</span></div>
+      <div class="row"><span class="hero-role">GRAPHIC</span><span class="hero-role fill">DESIGNER</span></div>
+    </div>
+    <p class="hero-sub">I design <strong>flyers, product ads, and brand marks</strong> for small businesses — the kind of work that has to stop someone mid-scroll and sell in one glance.</p>
+    <div class="hero-cta">
+      <a href="#work" class="btn solid">View the work →</a>
+      <a href="#contact" class="btn ghost">Get in touch</a>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>
+      <em>Orbit Media</em> · Favor Eniola · Sam Academy · Global Studio · Valora Fashion Collection · Treasure's Table · Lounge &amp; Club 1 · 24/7 Service ·
+    </span>
+    <span>
+      <em>Orbit Media</em> · Favor Eniola · Sam Academy · Global Studio · Valora Fashion Collection · Treasure's Table · Lounge &amp; Club 1 · 24/7 Service ·
+    </span>
+  </div>
+</div>
+
+<section class="work board-texture" id="work">
+  <div class="wrap">
+    <div class="work-intro">
+      <div class="sec-label">Selected Work</div>
+      <div class="sec-title">Straight off the board</div>
+      <p>Eight pieces, two disciplines: promotional flyers built to move product and fill rooms, and marks built to anchor a brand. Real briefs, real clients.</p>
+    </div>
+
+    <div class="category-block">
+      <div class="category-head">
+        <h3>Flyers &amp; Social Media Ads</h3>
+        <span class="category-note">Printed, posted, and shared — designed to sell in one glance</span>
+      </div>
+      <div class="board">
+
+        <div class="flyer">
+          <div class="tape"></div>
+          <div class="flyer-img"><img src="images/orbit-media.png" alt="Orbit Media club jersey flyer"></div>
+          <div class="flyer-cap">
+            <div class="flyer-tag">Sports Retail</div>
+            <div class="flyer-title">Orbit Media — Jersey Drop</div>
+            <div class="flyer-desc">Product flyer for a sportswear reseller, built around a hero jersey shot with a clear offer list and delivery info up front.</div>
+          </div>
+        </div>
+
+        <div class="flyer">
+          <div class="tape"></div>
+          <div class="flyer-img"><img src="images/favor-eniola.png" alt="Perfume oils flyer"></div>
+          <div class="flyer-cap">
+            <div class="flyer-tag">Beauty &amp; Fragrance</div>
+            <div class="flyer-title">Favor Eniola — Scent Collection</div>
+            <div class="flyer-desc">Warm, editorial flyer for a perfume oil line, pairing a lifestyle portrait with product shots and a scannable contact code.</div>
+          </div>
+        </div>
+
+        <div class="flyer">
+          <div class="tape"></div>
+          <div class="flyer-img"><img src="images/sam-academy.png" alt="Sam Academy new week social post"></div>
+          <div class="flyer-cap">
+            <div class="flyer-tag">Digital Skills</div>
+            <div class="flyer-title">Sam Academy — New Week</div>
+            <div class="flyer-desc">Bold, high-motion social post announcing a new training cohort, using oversized type and diagonal energy to match the brand's tone.</div>
+          </div>
+        </div>
+
+        <div class="flyer">
+          <div class="tape"></div>
+          <div class="flyer-img"><img src="images/valora-fashion.png" alt="Valora fashion collection flyer"></div>
+          <div class="flyer-cap">
+            <div class="flyer-tag">Fashion &amp; Retail</div>
+            <div class="flyer-title">Valora Fashion Collection</div>
+            <div class="flyer-desc">Catalogue-style flyer covering a wide product range, structured so the full offer list stays readable next to the lifestyle shot.</div>
+          </div>
+        </div>
+
+        <div class="flyer">
+          <div class="tape"></div>
+          <div class="flyer-img"><img src="images/treasure-table.png" alt="Treasure's Table Vzon chocolate ad"></div>
+          <div class="flyer-cap">
+            <div class="flyer-tag">Food &amp; Beverage</div>
+            <div class="flyer-title">Treasure's Table — Vzon</div>
+            <div class="flyer-desc">Premium product reveal for a chocolate-dates brand, built around a gold cloche moment to signal indulgence.</div>
+          </div>
+        </div>
+
+        <div class="flyer">
+          <div class="tape"></div>
+          <div class="flyer-img"><img src="images/lounge-club.png" alt="Lounge and Club 1 event flyer"></div>
+          <div class="flyer-cap">
+            <div class="flyer-tag">Nightlife &amp; Events</div>
+            <div class="flyer-title">Lounge &amp; Club 1 — Night Event</div>
+            <div class="flyer-desc">Event flyer for a club night, using strong portrait lighting and stacked type to carry date, time, and lineup at a glance.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="category-block">
+      <div class="category-head">
+        <h3>Logo &amp; Brand Marks</h3>
+        <span class="category-note">Pinned up for reference — marks built to work small</span>
+      </div>
+      <div class="pin-grid">
+
+        <div class="pinned">
+          <div class="pin-dot"></div>
+          <div class="pinned-img"><img src="images/global-studio.png" alt="Global Studio logo"></div>
+          <div class="pinned-tag">Branding</div>
+          <div class="pinned-title">Global Studio</div>
+          <div class="pinned-desc">Wordmark and icon combining a speech-bubble form with a starburst detail, built for a media/creative studio.</div>
+        </div>
+
+        <div class="pinned">
+          <div class="pin-dot"></div>
+          <div class="pinned-img"><img src="images/247-service.png" alt="24/7 Service logo"></div>
+          <div class="pinned-tag">Branding</div>
+          <div class="pinned-title">24/7 Service</div>
+          <div class="pinned-desc">Multi-color swoosh mark for an always-available service brand, paired with a classic serif wordmark for balance.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about wrap" id="about">
+  <div class="about-grid">
+    <div>
+      <div class="sec-label">About</div>
+      <div class="sec-title">Skills &amp; Tools</div>
+      <div class="about-tools">
+        <span class="tool-pill">Adobe Photoshop</span>
+        <span class="tool-pill">Adobe Illustrator</span>
+        <span class="tool-pill">Canva Pro</span>
+        <span class="tool-pill">Flyer Design</span>
+        <span class="tool-pill">Logo Design</span>
+        <span class="tool-pill">Social Media Ads</span>
+        <span class="tool-pill">Brand Identity</span>
+        <span class="tool-pill">Typography</span>
+      </div>
+    </div>
+    <div class="about-text">
+      <p>I'm <strong>Samuel Ojo</strong>, a graphic designer based in Nigeria, working mainly with small businesses, retailers, and event organizers who need design that sells — not just looks good.</p>
+      <p>My focus is <strong>commercial design that performs</strong>: flyers built to stop a scroll, product ads that make the offer obvious in two seconds, and brand marks simple enough to work anywhere from a WhatsApp status to a signboard.</p>
+      <p>Currently open to freelance projects, brand collaborations, and full-time design roles.</p>
+    </div>
+  </div>
+</section>
+
+<section class="contact wrap" id="contact">
+  <div class="contact-panel">
+    <div class="tape"></div>
+    <h2>Let's make<br>your next flyer.</h2>
+    <p>Have a product, event, or brand that needs to look this good? Reach out — I reply fast.</p>
+    <div class="contact-bar">
+      <a class="contact-pill" href="mailto:closersamuel01@gmail.com">✉ closersamuel01@gmail.com</a>
+      <a class="contact-pill" href="https://wa.me/2347077232290" target="_blank">☎ +234 707 723 2290</a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Samuel Ojo — Graphic Design Portfolio</footer>
+
+</body>
+</html>
